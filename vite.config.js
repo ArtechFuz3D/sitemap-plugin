@@ -6,7 +6,7 @@ export default defineConfig({
   base: './',
   plugins: [
     viteSeoPlugin({
-      siteUrl: 'https://yourusername.github.io/vite-seo-plugin-demo', // set your public URL
+      siteUrl: 'https://artechfuz3d.github.io/sitemax', // set your public URL
       generateRobots: true,
       meta: {
         title: 'Vite SEO Plugin Demo',
