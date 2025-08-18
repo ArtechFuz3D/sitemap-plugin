@@ -33,7 +33,7 @@ pages.forEach((pageFile) => {
 });
 
 test.beforeAll(async () => {
-    const { execSync } = require('child_process');
+   const { execSync } = await import("child_process");
     execSync('npm run build', { stdio: 'inherit' });
 });
 
