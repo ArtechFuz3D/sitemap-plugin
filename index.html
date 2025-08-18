@@ -1,53 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home - Vite SEO Plugin Demo</title>
-</head>
-<body>
-  <h1>Home</h1>
-  <p>Welcome to the Vite SEO Plugin Demo site.</p>
-  <nav>
-    <a href="./about.html">About</a> |
-    <a href="./services.html">Services</a> |
-    <a href="./blog.html">Blog</a> |
-    <a href="./contact.html">Contact</a>
-  </nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Welcome to Sitemax - Your automated sitemap generation solution"
+    />
+    <meta property="og:title" content="Sitemax - Automated Sitemap Generator" />
+    <meta
+      property="og:description"
+      content="Welcome to Sitemax - Your automated sitemap generation solution"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/public/og-image.png" />
+    <meta name="theme-color" content="#2563eb" />
+    <title>Sitemax - Automated Sitemap Generator</title>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">Sitemax</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/services">Services</a>
+          <a href="/blog">Blog</a>
+          <a href="/contact">Contact</a>
+        </nav>
+      </div>
+    </header>
 
-  <h2>Plugin Test</h2>
-  <div id="plugin-test">Checking plugin status...</div>
+    <main class="container">
+      <h1>Welcome to Sitemax</h1>
+      <p>
+        Your automated solution for sitemap generation and SEO optimization.
+      </p>
 
-  <script>
-    function testSEOPlugin() {
-      const metaDescription = document.querySelector('meta[name="description"]');
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      return metaDescription && ogTitle;
-    }
+      <h2>Plugin Status</h2>
+      <div id="plugin-test">Checking plugin status...</div>
+    </main>
 
-    function testFileExists(url) {
-      return fetch(url, { method: 'HEAD' }).then(res => res.ok).catch(() => false);
-    }
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Sitemax. All rights reserved.</p>
+      </div>
+    </footer>
 
-    async function runPluginTests() {
-      const seoOk = testSEOPlugin();
-      const sitemapOk = await testFileExists('sitemap.xml');
-      const robotsOk = await testFileExists('robots.txt');
-
-      const resultEl = document.getElementById('plugin-test');
-
-      if (seoOk && sitemapOk && robotsOk) {
-        resultEl.innerHTML = '<strong style="color:green;">✅ Plugin is working! SEO meta tags, sitemap.xml, and robots.txt detected.</strong>';
-      } else {
-        let errors = [];
-        if (!seoOk) errors.push('SEO meta tags missing');
-        if (!sitemapOk) errors.push('sitemap.xml missing');
-        if (!robotsOk) errors.push('robots.txt missing');
-        resultEl.innerHTML = '<strong style="color:red;">❌ Plugin test failed: ' + errors.join(', ') + '</strong>';
+    <script>
+      function testSEOPlugin() {
+        const metaDescription = document.querySelector(
+          'meta[name="description"]'
+        );
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        return metaDescription && ogTitle;
       }
-    }
 
-    runPluginTests();
-  </script>
-</body>
+      function testFileExists(url) {
+        return fetch(url, { method: "HEAD" })
+          .then((res) => res.ok)
+          .catch(() => false);
+      }
+
+      async function runPluginTests() {
+        const seoOk = testSEOPlugin();
+        const sitemapOk = await testFileExists("sitemap.xml");
+        const robotsOk = await testFileExists("robots.txt");
+
+        const resultEl = document.getElementById("plugin-test");
+
+        if (seoOk && sitemapOk && robotsOk) {
+          resultEl.innerHTML =
+            '<strong style="color:green;">✅ Plugin is working! SEO meta tags, sitemap.xml, and robots.txt detected.</strong>';
+        } else {
+          let errors = [];
+          if (!seoOk) errors.push("SEO meta tags missing");
+          if (!sitemapOk) errors.push("sitemap.xml missing");
+          if (!robotsOk) errors.push("robots.txt missing");
+          resultEl.innerHTML =
+            '<strong style="color:red;">❌ Plugin test failed: ' +
+            errors.join(", ") +
+            "</strong>";
+        }
+      }
+
+      function setActiveNavLink() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('nav a');
+
+        navLinks.forEach(link => {
+          // Remove active class from all links
+          link.classList.remove('active');
+
+          // Get the href path
+          const linkPath = link.getAttribute('href');
+
+          // Check if this link matches the current path
+          if (
+            (currentPath === '/' && linkPath === '/') ||
+            (currentPath !== '/' && linkPath !== '/' && currentPath.includes(linkPath))
+          ) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      // Set active link when page loads
+      document.addEventListener('DOMContentLoaded', () => {
+        setActiveNavLink();
+        runPluginTests();
+      });
+    </script>
+  </body>
 </html>

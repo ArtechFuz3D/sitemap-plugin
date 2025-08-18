@@ -19,15 +19,15 @@ pages.forEach((pageFile) => {
     expect(title.length).toBeGreaterThan(0);
 
     // Description meta
-    const description = await page.locator('meta[name="description"]');
+    const description = page.locator('meta[name="description"]');
     await expect(description).toHaveAttribute("content", /.+/);
 
     // og:image
-    const ogImage = await page.locator('meta[property="og:image"]');
+    const ogImage = page.locator('meta[property="og:image"]');
     await expect(ogImage).toHaveAttribute("content", /og-image\.png/);
 
     // canonical link
-    const canonical = await page.locator('link[rel="canonical"]');
+    const canonical = page.locator('link[rel="canonical"]');
     await expect(canonical).toHaveAttribute("href", new RegExp(pageFile.replace("index.html", "")));
   });
 });
@@ -45,7 +45,7 @@ test.describe('SEO meta tags', () => {
             const path = `file://${process.cwd()}/dist/${pageFile}`;
             await page.goto(path);
 
-            const canonical = await page.locator('link[rel="canonical"]');
+            const canonical = page.locator('link[rel="canonical"]');
             await expect(canonical).toHaveAttribute("href", new RegExp(pageFile.replace("index.html", "")));
         });
     }
