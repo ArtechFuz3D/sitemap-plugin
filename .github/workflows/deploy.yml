@@ -45,7 +45,7 @@ jobs:
       - name: Build site
         run: pnpm run build
 
-      - name: Debug: list repository root & dist
+      - name: "Debug: list repository root & dist"
         run: |
           echo "📦 Repo root files:"
           ls -la
