@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import viteSeoPlugin from './vite-seo-plugin.js';
+import sitemaxPlugin from './sitemax-plugin.js';
 
 export default defineConfig({
   // use relative base so serving dist/ locally works and GH Pages works too
@@ -21,7 +21,7 @@ export default defineConfig({
     modules: false,
   },
   plugins: [
-    viteSeoPlugin({
+    sitemaxPlugin({
       siteUrl: 'https://artechfuz3d.github.io/sitemax', // set your public URL
       generateRobots: true,
       meta: {
