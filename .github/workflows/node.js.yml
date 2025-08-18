@@ -1,0 +1,58 @@
+name: Build and Deploy Sitemax
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build site with Vite (runs Sitemax plugin)
+        run: pnpm build
+
+      - name: Verify SEO plugin output
+        run: |
+          echo "📂 Contents of dist/"
+          ls dist
+          echo "------"
+          if [ -f dist/sitemap.xml ]; then
+            echo "✅ sitemap.xml found"
+          else
+            echo "❌ sitemap.xml missing"
+            exit 1
+          fi
+          if [ -f dist/robots.txt ]; then
+            echo "✅ robots.txt found"
+          else
+            echo "❌ robots.txt missing"
+            exit 1
+          fi
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
