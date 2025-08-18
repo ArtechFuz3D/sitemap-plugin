@@ -2,14 +2,15 @@ import { defineConfig } from 'vite';
 import viteSeoPlugin from './vite-seo-plugin.js';
 
 export default defineConfig({
-  base: '/vite-seo-plugin-demo/',
+  // use relative base so serving dist/ locally works and GH Pages works too
+  base: './',
   plugins: [
     viteSeoPlugin({
-      siteUrl: 'https://yourusername.github.io/vite-seo-plugin-demo',
+      siteUrl: 'https://yourusername.github.io/vite-seo-plugin-demo', // set your public URL
       generateRobots: true,
       meta: {
         title: 'Vite SEO Plugin Demo',
-        description: 'Demo site using the Vite SEO plugin for multi-page SEO',
+        description: 'Demo site: sitemap + robots + meta tags via Vite plugin',
         ogImage: '/og-image.png'
       }
     })
