@@ -39,11 +39,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build site
-        run: pnpm build
-
-      - name: Install Playwright browsers
+      - name: Install Playwright browsers (required for tests)
         run: pnpm exec playwright install --with-deps
+
+      - name: Build site
+        run: pnpm run build
+
+      - name: Debug: list repository root & dist
+        run: |
+          echo "📦 Repo root files:"
+          ls -la
+          echo ""
+          echo "📂 dist contents (if any):"
+          if [ -d dist ]; then
+            ls -la dist || true
+            echo "---- head of dist/index.html ----"
+            head -n 50 dist/index.html || true
+          else
+            echo "dist/ directory not found"
+          fi
 
       - name: Run Playwright SEO tests
         run: pnpm exec playwright test || exit 1
@@ -74,12 +88,12 @@ jobs:
         run: pnpm install
 
       - name: Build site with Vite (Sitemax plugin)
-        run: pnpm build
+        run: pnpm run build
 
       - name: Verify SEO plugin output
         run: |
           echo "📂 Contents of dist/"
-          ls dist
+          ls -la dist || true
           if [ ! -f dist/sitemap.xml ]; then
             echo "❌ sitemap.xml missing"
             exit 1

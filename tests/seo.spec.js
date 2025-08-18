@@ -31,3 +31,23 @@ pages.forEach((pageFile) => {
     await expect(canonical).toHaveAttribute("href", new RegExp(pageFile.replace("index.html", "")));
   });
 });
+const { expect } = require('@playwright/test');
+
+test.beforeAll(async () => {
+    const { execSync } = require('child_process');
+    execSync('npm run build', { stdio: 'inherit' });
+});
+
+test.describe('SEO meta tags', () => {
+    const pages = ['index.html', 'about.html', 'services.html', 'blog.html', 'contact.html'];
+
+    for (const pageFile of pages) {
+        test(`SEO meta tags present on ${pageFile}`, async ({ page }) => {
+            const path = `file://${process.cwd()}/dist/${pageFile}`;
+            await page.goto(path);
+
+            const canonical = await page.locator('link[rel="canonical"]');
+            await expect(canonical).toHaveAttribute("href", new RegExp(pageFile.replace("index.html", "")));
+        });
+    }
+});
