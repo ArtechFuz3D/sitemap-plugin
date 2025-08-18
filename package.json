@@ -1,13 +1,19 @@
 {
-  "name": "vite-seo-plugin-docs",
+  "name": "vite-seo-plugin-demo",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 4173",
+    "screenshots": "node scripts/screenshot.js",
+    "install-playwright": "npx playwright install --with-deps"
   },
   "devDependencies": {
-    "fast-glob": "^3.2.7",
+    "fast-glob": "^3.2.12",
+    "playwright": "^1.38.0",
+    "serve-handler": "^6.1.3",
     "vite": "^5.0.0"
   }
 }
