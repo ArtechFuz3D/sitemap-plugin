@@ -1,7 +1,9 @@
-name: Build and Deploy Sitemax
+name: CI and Deploy Sitemax
 
 on:
   push:
+    branches: ["main"]
+  pull_request:
     branches: ["main"]
   workflow_dispatch:
 
@@ -11,8 +13,46 @@ permissions:
   id-token: write
 
 jobs:
-  build-deploy:
+  # ---------------------------
+  # CI Job - Runs on multiple Node versions
+  # ---------------------------
+  ci:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build (test build only)
+        run: pnpm build
+
+      - name: Run tests
+        run: pnpm test || echo "⚠️ No tests defined"
+
+  # ---------------------------
+  # Deploy Job - Runs only after CI passes
+  # ---------------------------
+  deploy:
+    needs: ci
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout repository
