@@ -13,9 +13,6 @@ permissions:
   id-token: write
 
 jobs:
-  # ---------------------------
-  # CI Job - Runs on multiple Node versions
-  # ---------------------------
   ci:
     runs-on: ubuntu-latest
     strategy:
@@ -30,25 +27,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
+      - name: Verify pnpm
+        run: pnpm --version
+
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build (test build only)
+      - name: Build site
         run: pnpm build
 
-      - name: Run tests
-        run: pnpm test || echo "⚠️ No tests defined"
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
 
-  # ---------------------------
-  # Deploy Job - Runs only after CI passes
-  # ---------------------------
+      - name: Run Playwright SEO tests
+        run: pnpm exec playwright test || exit 1
+
   deploy:
     needs: ci
     runs-on: ubuntu-latest
@@ -62,33 +61,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
+      - name: Verify pnpm
+        run: pnpm --version
+
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build site with Vite (runs Sitemax plugin)
+      - name: Build site with Vite (Sitemax plugin)
         run: pnpm build
 
       - name: Verify SEO plugin output
         run: |
           echo "📂 Contents of dist/"
           ls dist
-          echo "------"
-          if [ -f dist/sitemap.xml ]; then
-            echo "✅ sitemap.xml found"
-          else
+          if [ ! -f dist/sitemap.xml ]; then
             echo "❌ sitemap.xml missing"
             exit 1
           fi
-          if [ -f dist/robots.txt ]; then
-            echo "✅ robots.txt found"
-          else
+          if [ ! -f dist/robots.txt ]; then
             echo "❌ robots.txt missing"
             exit 1
           fi
