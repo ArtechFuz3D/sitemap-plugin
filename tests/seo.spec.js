@@ -31,7 +31,6 @@ pages.forEach((pageFile) => {
     await expect(canonical).toHaveAttribute("href", new RegExp(pageFile.replace("index.html", "")));
   });
 });
-const { expect } = require('@playwright/test');
 
 test.beforeAll(async () => {
     const { execSync } = require('child_process');
