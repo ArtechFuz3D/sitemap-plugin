@@ -3,17 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vite SEO Plugin Docs</title>
+  <title>Home - Vite SEO Plugin Demo</title>
 </head>
 <body>
-  <h1>Vite SEO Plugin Docs</h1>
-  <p>This documentation page itself uses the <code>vite-seo-plugin</code> plugin.</p>
+  <h1>Home</h1>
+  <p>Welcome to the Vite SEO Plugin Demo site.</p>
+  <nav>
+    <a href="./about.html">About</a> |
+    <a href="./services.html">Services</a> |
+    <a href="./blog.html">Blog</a> |
+    <a href="./contact.html">Contact</a>
+  </nav>
 
   <h2>Plugin Test</h2>
   <div id="plugin-test">Checking plugin status...</div>
 
   <script>
-    // --- Plugin Test Logic ---
     function testSEOPlugin() {
       const metaDescription = document.querySelector('meta[name="description"]');
       const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -21,9 +26,7 @@
     }
 
     function testFileExists(url) {
-      return fetch(url, { method: 'HEAD' })
-        .then(res => res.ok)
-        .catch(() => false);
+      return fetch(url, { method: 'HEAD' }).then(res => res.ok).catch(() => false);
     }
 
     async function runPluginTests() {
@@ -40,7 +43,6 @@
         if (!seoOk) errors.push('SEO meta tags missing');
         if (!sitemapOk) errors.push('sitemap.xml missing');
         if (!robotsOk) errors.push('robots.txt missing');
-
         resultEl.innerHTML = '<strong style="color:red;">❌ Plugin test failed: ' + errors.join(', ') + '</strong>';
       }
     }
