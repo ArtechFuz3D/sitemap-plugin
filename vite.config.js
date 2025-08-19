@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import sitemaxPlugin from './sitemax-plugin.js';
+import { resolve } from 'path';
 
 export default defineConfig({
   // use relative base so serving dist/ locally works and GH Pages works too
