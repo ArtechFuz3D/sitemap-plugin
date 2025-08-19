@@ -1,6 +1,6 @@
 {
   "name": "sitemax", 
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Sitemap generator plugin",
   "main": "sitemax-plugin.js",
   "type": "module",
