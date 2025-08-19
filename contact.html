@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Contact Sitemax - Get in touch with our sitemap generation experts">
-  <title>Contact - Sitemax</title>
-  <link rel="stylesheet" crossorigin href="/sitemax/assets/main-DlAIcBzX.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact Sitemax</title>
+  <meta name="description" content="Get in touch with the Sitemax team for support, feedback, or collaboration opportunities." />
+
+  <link rel="icon" href="../src/assets/favicon.png" type="image/png" />
+
+  <meta property="og:title" content="Contact Sitemax" />
+  <meta property="og:description" content="Reach out to Sitemax for support, business inquiries, or feature requests." />
+  <meta property="og:image" content="https://artechfuz3d.github.io/sitemax/og-image-contact.png" />
+  <meta property="og:url" content="https://artechfuz3d.github.io/sitemax/contact/" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Contact Sitemax" />
+  <meta name="twitter:description" content="We’d love to hear from you. Contact the Sitemax team today." />
+  <meta name="twitter:image" content="https://artechfuz3d.github.io/sitemax/og-image-contact.png" />
+
+  <link rel="stylesheet" crossorigin href="/sitemax/assets/main-DyuVZwYY.css">
 </head>
+
 <body>
   <header>
     <div class="container">
@@ -14,17 +29,34 @@
       <nav>
           <a href="./">Home</a>
           <a href="./docs">Docs</a>
-          <a href="./services">Services</a>
+          <!-- <a href="./services">Services</a> -->
           <a href="./blog">Blog</a>
-          <a href="./contact">Contact</a>
+          <a href="./contact" class="active">Contact</a>
       </nav>
     </div>
   </header>
 
-  <main class="container">
-    <h1>Contact Us</h1>
-    <p>Have questions about Sitemax? We're here to help.</p>
-  </main>
+<main class="container">
+  <h1>Contact Us</h1>
+  <p>Have questions about Sitemax? We're here to help.</p>
+
+  <form class="contact-form" action="mailto:you@example.com" method="POST">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="message">Message</label>
+    <textarea id="message" name="message" required></textarea>
+
+    <button type="submit">Send Message</button>
+    <a class="github-link" href="https://github.com/ArtechFuz3D/sitemax" target="_blank" rel="noopener">
+      View Sitemax on GitHub
+    </a>
+  </form>
+</main>
+
 
   <footer>
     <div class="container">
