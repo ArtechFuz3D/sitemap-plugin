@@ -1,34 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="Welcome to Sitemax - Your automated sitemap generation solution"
+      content="Sitemax — automatic sitemap generation & SEO helpers for static sites"
     />
-    <meta property="og:title" content="Sitemax - Automated Sitemap Generator" />
-    <meta
-      property="og:description"
-      content="Welcome to Sitemax - Your automated sitemap generation solution"
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/public/og-image.png" />
-    <meta name="theme-color" content="#2563eb" />
-    <title>Sitemax - Automated Sitemap Generator</title>
+    <title>Sitemax — Sitemap Generator</title>
     <link rel="stylesheet" href="./src/styles/main.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <header>
-      <div class="container">
+      <div class="container header-row">
         <div class="logo">Sitemax</div>
         <nav>
           <a href="./">Home</a>
-          <a href="./about">About</a>
+          <a href="./docs">Docs</a>
           <a href="./services">Services</a>
           <a href="./blog">Blog</a>
           <a href="./contact">Contact</a>
@@ -36,14 +24,40 @@
       </div>
     </header>
 
-    <main class="container">
-      <h1>Welcome to Sitemax</h1>
-      <p>
-        Your automated solution for sitemap generation and SEO optimization.
-      </p>
+    <main class="container hero">
+      <div class="hero-left">
+        <h1>Sitemax</h1>
+        <p class="tagline">
+          Automatic sitemap & robots generator for Vite-powered static sites —
+          built for fast deploys and SEO checks.
+        </p>
 
-      <h2>Plugin Status</h2>
-      <div id="plugin-test">Checking plugin status...</div>
+        <div class="cta-row">
+          <a class="btn-primary" href="./about#installation">Install</a>
+          <a
+            class="btn-ghost"
+            href="https://github.com/ArtechFuz3D/sitemax"
+            target="_blank"
+            rel="noopener"
+            >View on GitHub</a
+          >
+        </div>
+
+        <ul class="features">
+          <li>Generates sitemap.xml & robots.txt on build</li>
+          <li>Works with GitHub Pages & Vite base paths</li>
+          <li>Small plugin, easy to configure</li>
+        </ul>
+      </div>
+
+      <aside class="hero-right">
+        <h3>Live test logs</h3>
+        <div id="logs" class="log-panel" aria-live="polite"></div>
+        <div class="log-controls">
+          <button id="run-tests" class="btn-sm">Run tests</button>
+          <button id="clear-logs" class="btn-sm ghost">Clear</button>
+        </div>
+      </aside>
     </main>
 
     <footer>
@@ -53,9 +67,72 @@
     </footer>
 
     <script>
+      // Simple animated log runner for the landing page (non-blocking, UI-only)
+      const LOGS = [
+        { text: "Checking plugin status...", delay: 600, type: "info" },
+        { text: "Looking for sitemap.xml", delay: 800, type: "info" },
+        {
+          text: "Trying https://artechfuz3d.github.io/sitemax/sitemap.xml",
+          delay: 900,
+          type: "try",
+        },
+        { text: "sitemap.xml found", delay: 500, type: "ok" },
+        { text: "Looking for robots.txt", delay: 600, type: "info" },
+        {
+          text: "Trying https://artechfuz3d.github.io/sitemax/robots.txt",
+          delay: 800,
+          type: "try",
+        },
+        { text: "robots.txt found", delay: 400, type: "ok" },
+        { text: "All checks passed ✅", delay: 700, type: "success" },
+      ];
+
+      function appendLogLine(text, type = "info") {
+        const out = document.getElementById("logs");
+        const line = document.createElement("div");
+        line.className = "log-line " + type;
+        // small typing effect
+        let i = 0;
+        const span = document.createElement("span");
+        line.appendChild(span);
+        out.appendChild(line);
+        out.scrollTop = out.scrollHeight;
+        const t = setInterval(() => {
+          span.textContent += text.charAt(i++);
+          out.scrollTop = out.scrollHeight;
+          if (i > text.length) clearInterval(t);
+        }, 10);
+      }
+
+      function runDemoLogs() {
+        const btn = document.getElementById("run-tests");
+        btn.disabled = true;
+        let t = 0;
+        LOGS.forEach((entry, idx) => {
+          t += entry.delay;
+          setTimeout(() => {
+            appendLogLine(entry.text, entry.type);
+            if (idx === LOGS.length - 1) btn.disabled = false;
+          }, t);
+        });
+      }
+
+      document
+        .getElementById("run-tests")
+        .addEventListener("click", runDemoLogs);
+      document.getElementById("clear-logs").addEventListener("click", () => {
+        document.getElementById("logs").innerHTML = "";
+      });
+
+      // Auto-run once for landing page
+      setTimeout(runDemoLogs, 600);
+    </script>
+    <script>
       // Quick check for basic meta presence
       function testSEOPlugin() {
-        const metaDescription = document.querySelector('meta[name="description"]');
+        const metaDescription = document.querySelector(
+          'meta[name="description"]'
+        );
         const ogTitle = document.querySelector('meta[property="og:title"]');
         return !!(metaDescription && ogTitle);
       }
@@ -77,22 +154,32 @@
         candidates.add(resolveAgainstBase(filename));
         // 2) absolute at origin root
         try {
-          candidates.add(new URL('/' + filename.replace(/^\/+/, ''), location.origin).href);
+          candidates.add(
+            new URL("/" + filename.replace(/^\/+/, ""), location.origin).href
+          );
         } catch {}
         // 3) try prefixed with the first pathname segment (handles GH Pages subpath /sitemax/)
         try {
-          const parts = location.pathname.split('/').filter(Boolean);
+          const parts = location.pathname.split("/").filter(Boolean);
           if (parts.length > 0) {
-            candidates.add(new URL(`/${parts[0]}/${filename}`, location.origin).href);
+            candidates.add(
+              new URL(`/${parts[0]}/${filename}`, location.origin).href
+            );
           }
         } catch {}
         // 4) try canonical / og:url if available
-        const canonical = document.querySelector('link[rel="canonical"]')?.getAttribute('href');
-        const ogUrl = document.querySelector('meta[property="og:url"]')?.getAttribute('content');
+        const canonical = document
+          .querySelector('link[rel="canonical"]')
+          ?.getAttribute("href");
+        const ogUrl = document
+          .querySelector('meta[property="og:url"]')
+          ?.getAttribute("content");
         for (const src of [canonical, ogUrl]) {
           if (src) {
             try {
-              const base = new URL(src).origin + new URL(src).pathname.replace(/\/[^/]*$/, '/');
+              const base =
+                new URL(src).origin +
+                new URL(src).pathname.replace(/\/[^/]*$/, "/");
               candidates.add(new URL(filename, base).href);
             } catch {}
           }
@@ -109,7 +196,11 @@
             // use GET (some servers don't support HEAD reliably)
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
-            const res = await fetch(url, { method: 'GET', cache: 'no-store', signal: controller.signal });
+            const res = await fetch(url, {
+              method: "GET",
+              cache: "no-store",
+              signal: controller.signal,
+            });
             clearTimeout(id);
             if (res && res.ok) return { found: true, url };
           } catch (e) {
@@ -121,10 +212,10 @@
 
       async function runPluginTests() {
         const seoOk = testSEOPlugin();
-        const sitemapCheck = await findExistingFile('sitemap.xml');
-        const robotsCheck = await findExistingFile('robots.txt');
+        const sitemapCheck = await findExistingFile("sitemap.xml");
+        const robotsCheck = await findExistingFile("robots.txt");
 
-        const resultEl = document.getElementById('plugin-test');
+        const resultEl = document.getElementById("plugin-test");
 
         if (seoOk && sitemapCheck.found && robotsCheck.found) {
           resultEl.innerHTML =
@@ -132,16 +223,22 @@
             `<div style="font-size:0.9em;margin-top:6px;">sitemap: ${sitemapCheck.url} — robots: ${robotsCheck.url}</div>`;
         } else {
           const errors = [];
-          if (!seoOk) errors.push('SEO meta tags missing');
-          if (!sitemapCheck.found) errors.push('sitemap.xml missing');
-          if (!robotsCheck.found) errors.push('robots.txt missing');
+          if (!seoOk) errors.push("SEO meta tags missing");
+          if (!sitemapCheck.found) errors.push("sitemap.xml missing");
+          if (!robotsCheck.found) errors.push("robots.txt missing");
           resultEl.innerHTML =
-            '<strong style="color:red;">❌ Plugin test failed: ' + errors.join(', ') + '</strong>' +
-            `<div style="font-size:0.8em;margin-top:6px;color:#666;">Tried: ${ (sitemapCheck.tried || []).concat(robotsCheck.tried || []).join(' , ') }</div>`;
+            '<strong style="color:red;">❌ Plugin test failed: ' +
+            errors.join(", ") +
+            "</strong>" +
+            `<div style="font-size:0.8em;margin-top:6px;color:#666;">Tried: ${(
+              sitemapCheck.tried || []
+            )
+              .concat(robotsCheck.tried || [])
+              .join(" , ")}</div>`;
         }
       }
 
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener("DOMContentLoaded", () => {
         runPluginTests();
       });
     </script>

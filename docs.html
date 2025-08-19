@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Docs Sitemax - Installation & useage guide for Sitemax, the automatic sitemap generator for static sites."
+    />
+    <title>Docs - Sitemax</title>
+    <link rel="stylesheet" href="./src/styles/main.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container header-row">
+        <div class="logo">Sitemax</div>
+        <nav>
+          <a href="./">Home</a>
+          <a href="./docs">Docs</a>
+          <a href="./services">Services</a>
+          <a href="./blog">Blog</a>
+          <a href="./contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container docs">
+      <h1>Sitemax — User Documentation</h1>
+
+      <section id="installation">
+        <h2>Installation</h2>
+        <p>Install the plugin with your package manager:</p>
+        <pre><code>pnpm add -D sitemax-plugin
+# or
+npm i -D sitemax-plugin
+</code></pre>
+        <p>Or use the local plugin file as in this repository.</p>
+      </section>
+
+      <section id="usage">
+        <h2>Usage (Vite)</h2>
+        <p>Minimal vite.config.js example:</p>
+        <pre><code>import { defineConfig } from 'vite';
+import sitemaxPlugin from './sitemax-plugin.js';
+
+export default defineConfig({
+  base: '/your-base/',
+  plugins: [
+    sitemaxPlugin({
+      siteUrl: 'https://your-site.example',
+      generateRobots: true,
+      meta: {
+        title: 'Site title',
+        description: 'Site description',
+        ogImage: '/og-image.png'
+      }
+    })
+  ]
+});
+</code></pre>
+      </section>
+
+      <section id="configuration">
+        <h2>Configuration</h2>
+        <ul>
+          <li>
+            <strong>siteUrl</strong> — public root URL used when generating
+            absolute sitemap URLs
+          </li>
+          <li>
+            <strong>generateRobots</strong> — include robots.txt when true
+          </li>
+          <li>
+            <strong>meta</strong> — default meta title/description/ogImage for
+            test checks
+          </li>
+        </ul>
+      </section>
+
+      <section id="how-it-works">
+        <h2>How it works</h2>
+        <p>
+          On build the plugin collects your built HTML files, normalizes routes
+          and writes sitemap.xml and optionally robots.txt to the dist folder.
+          The CI workflow can copy those to public/ and deploy to GitHub Pages.
+        </p>
+      </section>
+
+      <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+        <ol>
+          <li>
+            Ensure <code>siteUrl</code> matches your published Pages URL
+            (including project subpath).
+          </li>
+          <li>
+            Verify GitHub Pages is configured to serve the
+            <code>gh-pages</code> branch (root).
+          </li>
+          <li>
+            Use the Debug workflow steps to inspect dist/ and gh-pages contents
+            if files are missing.
+          </li>
+        </ol>
+      </section>
+
+      <aside class="doc-cta">
+        <a class="btn-primary" href="#installation">Get Started — Install</a>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Sitemax. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

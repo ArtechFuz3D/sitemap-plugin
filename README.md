@@ -26,3 +26,7 @@ Each page includes a **self-testing system** that confirms the plugin is working
 ```bash
 pnpm install
 ```
+
+### meta image
+
+![img](public/sitemaxlogo.png)
