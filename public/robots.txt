@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://artechfuz3d.github.io/sitemax/sitemap.xml
