@@ -9,11 +9,11 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: {
-        main: './index.html',
-        about: './src/pages/about.html',
-        services: './src/pages/services.html',
-        blog: './src/pages/blog.html',
-        contact: './src/pages/contact.html'
+        main: resolve(__dirname, 'index.html'),
+        about: resolve(__dirname, 'src/pages/about.html'),
+        services: resolve(__dirname, 'src/pages/services.html'),
+        blog: resolve(__dirname, 'src/pages/blog.html'),
+        contact: resolve(__dirname, 'src/pages/contact.html'),
       }
     }
   },
