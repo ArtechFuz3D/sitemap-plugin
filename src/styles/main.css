@@ -2,16 +2,67 @@
   --gradient-primary: linear-gradient(135deg, #2563eb, #4f46e5);
   --gradient-secondary: linear-gradient(135deg, #3b82f6, #8b5cf6);
   --gradient-accent: linear-gradient(135deg, #06b6d4, #3b82f6);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --background: #0f172a;
-  --surface: #1e293b;
-  --surface-alt: #334155;
+  --text-primary: #222222;
+  --text-secondary: #0a0a0a;
+  --background: #c4c4c4;
+  --surface: #aaaaaa;
+  --surface-alt: #575757;
   --max-width: 1200px;
   --border-radius: 12px;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Global link styling */
+/* Inline link styling with slight border */
+a {
+  position: relative;       /* needed for ::after */
+  color: var(--text-primary);
+  text-decoration: none;    
+  padding: 0.1rem 0.2rem;   /* small padding */
+  border: 1px solid rgba(0,0,0,0.1); /* subtle border */
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  left: 0;
+  bottom: -2px;
+  background: var(--gradient-primary);
+  transition: width 0.3s ease;
+}
+
+a:hover {
+  color: #2563eb;  
+  border-color: rgba(0,0,0,0.2); /* slightly darker border on hover */
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+/* Optional block-style links with border */
+a.block-link {
+  display: inline-block;
+  background: var(--surface);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.1);
+  margin: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+
+a.block-link:hover {
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(0,0,0,0.2);
+  transform: translateY(-2px);
 }
 
 html, body {
@@ -203,4 +254,155 @@ footer p {
 
 main {
   animation: fadeIn 0.5s ease-out;
+}
+
+/* Sidebar TOC */
+.toc {
+  flex: 0 0 220px;
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  height: fit-content;
+  position: sticky;
+  top: 6rem;
+}
+
+.toc h3 {
+  margin-top: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc li {
+  margin-bottom: 0.5rem;
+}
+
+.toc a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.toc a:hover {
+  color: var(--text-primary);
+}
+
+/* Docs layout */
+.docs {
+  display: flex;
+  gap: 2rem;
+}
+
+.docs-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Code blocks */
+pre {
+  background: var(--background);
+  border: 1px solid var(--surface-alt);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+code {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Callouts */
+.note, .warning {
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.note {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid #3b82f6;
+  color: var(--text-secondary);
+}
+
+.warning {
+  background: rgba(234, 179, 8, 0.1);
+  border-left: 4px solid #facc15;
+  color: var(--text-primary);
+}
+
+/* Responsive docs layout */
+@media (max-width: 1024px) {
+  .docs {
+    flex-direction: column;
+  }
+  .toc {
+    position: relative;
+    top: 0;
+    width: 100%;
+  }
+}
+
+/* Contact Form */
+.contact-form {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+  max-width: 600px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--surface-alt);
+}
+
+.contact-form input,
+.contact-form textarea {
+  background: #ffffff; /* clean white fields */
+  border: 1px solid var(--surface-alt);
+  color: var(--text-primary);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* GitHub link in form */
+.contact-form .github-link {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.contact-form .github-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: var(--gradient-primary);
+  transition: width 0.3s ease;
+}
+
+.contact-form .github-link:hover {
+  color: var(--text-primary);
+}
+
+.contact-form .github-link:hover::after {
+  width: 100%;
 }
