@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import sitemaxPlugin from './sitemax-plugin.js';
+import sitemaxPlugin from './sitemax-plugin/sitemax-plugin.js';
 import { resolve } from 'path';
 
 export default defineConfig({

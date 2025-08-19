@@ -5,10 +5,10 @@
 [![npm version](https://img.shields.io/npm/v/sitemax.svg)](https://www.npmjs.com/package/sitemax)
 [![License](https://img.shields.io/npm/l/sitemax.svg)](LICENSE)
 
-- Injects SEO meta tags
-- Generates `sitemap.xml`
-- Generates `robots.txt`
-- Works with multi-page static sites
+* Injects SEO meta tags
+* Generates `sitemap.xml`
+* Generates `robots.txt`
+* Works with multi-page static sites
 
 ---
 
@@ -99,44 +99,3 @@ Contributions are welcome! Please open an issue or pull request.
 ## License
 
 MIT © Neill Hewitt
-
----
----
----
-
-## Vite SEO Plugin Demo
-
-This is a **multi-page demonstration site** for the **Vite SEO Plugin**, which automatically:
-
-- Injects SEO meta tags
-- Generates `sitemap.xml`
-- Generates `robots.txt`
-- Works with multi-page static sites
-
----
-
-## Pages
-
-- `index.html` - Home
-- `about.html` - About
-- `services.html` - Services
-- `blog.html` - Blog
-- `contact.html` - Contact
-
-Each page includes a **self-testing system** that confirms the plugin is working.
-
----
-
-## Run
-
-```bash
-pnpm i && pnpm dev
-```
-
-### meta image
-
-![img](public/sitemaxlogo.png)
-
----
----
----

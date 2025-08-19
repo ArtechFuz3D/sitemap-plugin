@@ -1,0 +1,13 @@
+node_modules
+tests
+src
+.git
+.github
+coverage
+
+/node_modules
+/src
+/dist
+/tests
+/.github
+/.git
