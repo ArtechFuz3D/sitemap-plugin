@@ -1,29 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sitemax Blog - Latest updates and insights about sitemap generation and SEO">
-  <title>Blog - Sitemax</title>
-  <link rel="stylesheet" href="./src/styles/main.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sitemax Blog & Changelog</title>
+  <meta name="description" content="Read the latest Sitemax blog posts, updates, and changelog about sitemap generation and SEO." />
+
+  <link rel="icon" href="../src/assets/favicon.png" type="image/png" />
+
+  <meta property="og:title" content="Sitemax Blog & Changelog" />
+  <meta property="og:description" content="Follow Sitemax development, changelog updates, and SEO optimization guides." />
+  <meta property="og:image" content="https://artechfuz3d.github.io/sitemax/og-image-blog.png" />
+  <meta property="og:url" content="https://artechfuz3d.github.io/sitemax/blog/" />
+  <meta property="og:type" content="article" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sitemax Blog & Changelog" />
+  <meta name="twitter:description" content="Stay updated with Sitemax’s progress and SEO insights." />
+  <meta name="twitter:image" content="https://artechfuz3d.github.io/sitemax/og-image-blog.png" />
+
+  <link rel="stylesheet" href="./src/styles/main.css" />
 </head>
+
 <body>
   <header>
-    <div class="container">
+    <div class="container header-row">
       <div class="logo">Sitemax</div>
       <nav>
           <a href="./">Home</a>
           <a href="./docs">Docs</a>
-          <a href="./services">Services</a>
-          <a href="./blog">Blog</a>
+          <!-- <a href="../services">Services</a> -->
+          <a href="./blog" class="active">Blog</a>
           <a href="./contact">Contact</a>
       </nav>
     </div>
   </header>
 
-  <main class="container">
+  <main class="container blog">
     <h1>Latest Updates</h1>
-    <p>Stay informed about the latest developments in sitemap generation and SEO optimization.</p>
+    <p class="intro">Stay informed about the latest developments in sitemap generation and SEO optimization.</p>
+
+    <!-- Changelog posts -->
+    <article class="post">
+      <h2>🚀 Version 1.1.0 Released</h2>
+      <p class="meta">Published on August 19, 2025</p>
+      <p>
+        We’re excited to announce <strong>Sitemax v1.1.0</strong> — a major improvement in usability and deployment stability.
+      </p>
+      <ul>
+        <li>✨ New <code>plugin test</code> panel on the landing page for live verification</li>
+        <li>📄 Improved documentation with accurate install & usage steps</li>
+        <li>🎨 Refreshed styling for hero, features, and CTA buttons</li>
+        <li>🛠 Fixed base path handling for GitHub Pages</li>
+      </ul>
+      <p>
+        👉 Try it out now on <a href="https://github.com/ArtechFuz3D/sitemax" target="_blank">GitHub</a>.
+      </p>
+    </article>
+
+    <article class="post">
+      <h2>Initial Release — v1.0.0</h2>
+      <p class="meta">Published on August 10, 2025</p>
+      <p>
+        The first stable release of <strong>Sitemax</strong> is here! 🎉
+      </p>
+      <ul>
+        <li>✅ Automatic <code>sitemap.xml</code> generation</li>
+        <li>✅ Automatic <code>robots.txt</code> generation</li>
+        <li>✅ Out-of-the-box support for Vite + GitHub Pages</li>
+      </ul>
+      <p>
+        This marks the beginning of our journey to make SEO-friendly static site deployment seamless.
+      </p>
+    </article>
   </main>
 
   <footer>
