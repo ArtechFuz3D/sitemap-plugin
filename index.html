@@ -61,8 +61,19 @@
         return metaDescription && ogTitle;
       }
 
+      // Resolve relative URLs against the page base so tests work on GitHub Pages, local file://, and dev servers.
+      function resolveUrlAgainstBase(url) {
+        try {
+          return new URL(url, document.baseURI).href;
+        } catch {
+          // fallback to using the raw url
+          return url;
+        }
+      }
+
       function testFileExists(url) {
-        return fetch(url, { method: "HEAD" })
+        const resolved = resolveUrlAgainstBase(url);
+        return fetch(resolved, { method: "HEAD" })
           .then((res) => res.ok)
           .catch(() => false);
       }
