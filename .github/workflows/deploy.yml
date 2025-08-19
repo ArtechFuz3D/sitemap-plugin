@@ -148,6 +148,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          publish_branch: gh-pages
+          # optional: a stable commit message
+          commit_message: 'chore: deploy to gh-pages (via actions)'
 
       - name: Verify gh-pages branch contents (debug)
         if: always()
@@ -155,7 +158,6 @@ jobs:
           echo "Fetch and list gh-pages branch root (if it exists)"
           git fetch --no-tags --prune --depth=1 origin gh-pages || echo "gh-pages branch may not exist"
           mkdir -p /tmp/gh-pages
-          # try to populate a worktree for the gh-pages branch for inspection
           git worktree add /tmp/gh-pages origin/gh-pages || echo "worktree add failed (branch may not exist)"
           echo "---- /tmp/gh-pages listing ----"
           ls -la /tmp/gh-pages || true
@@ -170,3 +172,18 @@ jobs:
           else
             echo "❌ gh-pages/robots.txt missing"
           fi
+
+      - name: Verify deployed site URLs (curl)
+        if: always()
+        run: |
+          set -e
+          BASE_URL="https://artechfuz3d.github.io/sitemax"
+          echo "Checking deployed endpoints on $BASE_URL"
+          for f in sitemap.xml robots.txt index.html; do
+            echo "-> $BASE_URL/$f"
+            status=$(curl -s -o /dev/null -w "%{http_code}" -I "$BASE_URL/$f" || true)
+            echo "$BASE_URL/$f -> HTTP $status"
+          done
+          echo ""
+          echo "Preview raw gh-pages sitemap (raw.githubusercontent.com):"
+          curl -sSf "https://raw.githubusercontent.com/ArtechFuz3D/sitemax/gh-pages/sitemap.xml" | head -n 20 || true
