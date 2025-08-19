@@ -70,6 +70,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -90,21 +92,81 @@ jobs:
       - name: Build site with Vite (Sitemax plugin)
         run: pnpm run build
 
-      - name: Verify SEO plugin output
+      - name: Verify SEO plugin output (dist)
         run: |
           echo "📂 Contents of dist/"
           ls -la dist || true
           if [ ! -f dist/sitemap.xml ]; then
-            echo "❌ sitemap.xml missing"
+            echo "❌ sitemap.xml missing in dist/"
             exit 1
+          else
+            echo "✅ dist/sitemap.xml exists (size: $(stat -c%s dist/sitemap.xml) bytes)"
+            echo "---- head of dist/sitemap.xml ----"
+            head -n 40 dist/sitemap.xml || true
           fi
           if [ ! -f dist/robots.txt ]; then
-            echo "❌ robots.txt missing"
+            echo "❌ robots.txt missing in dist/"
             exit 1
+          else
+            echo "✅ dist/robots.txt exists (size: $(stat -c%s dist/robots.txt) bytes)"
+            echo "---- head of dist/robots.txt ----"
+            head -n 20 dist/robots.txt || true
           fi
+
+      - name: Copy generated sitemap/robots into public/ and commit to main (optional persistence)
+        env:
+          GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          echo "Ensure public/ exists"
+          mkdir -p public
+          cp -v dist/sitemap.xml public/ 2>/dev/null || true
+          cp -v dist/robots.txt public/ 2>/dev/null || true
+          echo "Listing public/:"
+          ls -la public || true
+          # If files were copied, commit them back to main so future builds include them as static files.
+          if git status --porcelain | grep -q "public/"; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/sitemap.xml public/robots.txt || true
+            git commit -m "chore: sync dist sitemap & robots to public [skip ci]" || echo "No changes to commit"
+            echo "Pushing committed public/ files back to main (will not re-run workflows due to [skip ci])"
+            git push "https://${GIT_TOKEN}@github.com/${{ github.repository }}.git" HEAD:main --quiet || echo "Push failed or nothing to push"
+          else
+            echo "No changes detected in public/ to commit"
+          fi
+
+      - name: Verify public/ contains files
+        run: |
+          echo "📂 public/ listing"
+          ls -la public || true
+          test -f public/sitemap.xml && echo "public/sitemap.xml present" || echo "public/sitemap.xml missing"
+          test -f public/robots.txt && echo "public/robots.txt present" || echo "public/robots.txt missing"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+
+      - name: Verify gh-pages branch contents (debug)
+        if: always()
+        run: |
+          echo "Fetch and list gh-pages branch root (if it exists)"
+          git fetch --no-tags --prune --depth=1 origin gh-pages || echo "gh-pages branch may not exist"
+          mkdir -p /tmp/gh-pages
+          # try to populate a worktree for the gh-pages branch for inspection
+          git worktree add /tmp/gh-pages origin/gh-pages || echo "worktree add failed (branch may not exist)"
+          echo "---- /tmp/gh-pages listing ----"
+          ls -la /tmp/gh-pages || true
+          echo "Check for sitemap and robots in gh-pages:"
+          if [ -f /tmp/gh-pages/sitemap.xml ]; then
+            echo "✅ gh-pages/sitemap.xml present (size: $(stat -c%s /tmp/gh-pages/sitemap.xml) bytes)"
+          else
+            echo "❌ gh-pages/sitemap.xml missing"
+          fi
+          if [ -f /tmp/gh-pages/robots.txt ]; then
+            echo "✅ gh-pages/robots.txt present (size: $(stat -c%s /tmp/gh-pages/robots.txt) bytes)"
+          else
+            echo "❌ gh-pages/robots.txt missing"
+          fi
