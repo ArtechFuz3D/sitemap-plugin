@@ -20,6 +20,9 @@ importers:
       serve-handler:
         specifier: ^6.1.3
         version: 6.1.6
+      sitemax:
+        specifier: ^1.2.1
+        version: 1.2.1
       vite:
         specifier: ^5.0.0
         version: 5.4.19
@@ -420,6 +423,9 @@ packages:
   serve-handler@6.1.6:
     resolution: {integrity: sha512-x5RL9Y2p5+Sh3D38Fh9i/iQ5ZK+e4xuXRd/pGbM4D13tgo/MGwbttUk8emytcr1YYzBYs+apnUngBDFYfpjPuQ==}
 
+  sitemax@1.2.1:
+    resolution: {integrity: sha512-p2zpxMgLatv/vmppJrZ5xCDd1bsf6/fTVVfWhSvwT8gcgS9G7vRx15tMe/mREf/N4A05wnehBL25JDPWLG7YrQ==}
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -771,6 +777,8 @@ snapshots:
       path-is-inside: 1.0.2
       path-to-regexp: 3.3.0
       range-parser: 1.2.0
+
+  sitemax@1.2.1: {}
 
   source-map-js@1.2.1: {}
 
