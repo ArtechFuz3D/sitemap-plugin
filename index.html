@@ -20,7 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" crossorigin href="/sitemax/assets/main-DlAIcBzX.css">
+    <link rel="stylesheet" crossorigin href="/assets/main-DlAIcBzX.css">
   </head>
   <body>
     <header>
@@ -53,77 +53,95 @@
     </footer>
 
     <script>
+      // Quick check for basic meta presence
       function testSEOPlugin() {
-        const metaDescription = document.querySelector(
-          'meta[name="description"]'
-        );
+        const metaDescription = document.querySelector('meta[name="description"]');
         const ogTitle = document.querySelector('meta[property="og:title"]');
-        return metaDescription && ogTitle;
+        return !!(metaDescription && ogTitle);
       }
 
-      // Resolve relative URLs against the page base so tests work on GitHub Pages, local file://, and dev servers.
-      function resolveUrlAgainstBase(url) {
+      // Resolve a candidate URL against document.baseURI (works for file://, http(s) and GH Pages base)
+      function resolveAgainstBase(href) {
         try {
-          return new URL(url, document.baseURI).href;
+          return new URL(href, document.baseURI).href;
         } catch {
-          // fallback to using the raw url
-          return url;
+          return href;
         }
       }
 
-      function testFileExists(url) {
-        const resolved = resolveUrlAgainstBase(url);
-        return fetch(resolved, { method: "HEAD" })
-          .then((res) => res.ok)
-          .catch(() => false);
+      // Build a list of candidate sitemap/robots URLs to try
+      function buildCandidates(filename) {
+        const candidates = new Set();
+
+        // 1) relative to current document base
+        candidates.add(resolveAgainstBase(filename));
+        // 2) absolute at origin root
+        try {
+          candidates.add(new URL('/' + filename.replace(/^\/+/, ''), location.origin).href);
+        } catch {}
+        // 3) try prefixed with the first pathname segment (handles GH Pages subpath /sitemax/)
+        try {
+          const parts = location.pathname.split('/').filter(Boolean);
+          if (parts.length > 0) {
+            candidates.add(new URL(`/${parts[0]}/${filename}`, location.origin).href);
+          }
+        } catch {}
+        // 4) try canonical / og:url if available
+        const canonical = document.querySelector('link[rel="canonical"]')?.getAttribute('href');
+        const ogUrl = document.querySelector('meta[property="og:url"]')?.getAttribute('content');
+        for (const src of [canonical, ogUrl]) {
+          if (src) {
+            try {
+              const base = new URL(src).origin + new URL(src).pathname.replace(/\/[^/]*$/, '/');
+              candidates.add(new URL(filename, base).href);
+            } catch {}
+          }
+        }
+        // return ordered array (prefer document.baseURI first)
+        return Array.from(candidates);
+      }
+
+      // Try fetching candidate URLs sequentially with small timeout and return first ok
+      async function findExistingFile(filename, timeout = 3000) {
+        const candidates = buildCandidates(filename);
+        for (const url of candidates) {
+          try {
+            // use GET (some servers don't support HEAD reliably)
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            const res = await fetch(url, { method: 'GET', cache: 'no-store', signal: controller.signal });
+            clearTimeout(id);
+            if (res && res.ok) return { found: true, url };
+          } catch (e) {
+            // ignore and try next candidate
+          }
+        }
+        return { found: false, tried: candidates };
       }
 
       async function runPluginTests() {
         const seoOk = testSEOPlugin();
-        const sitemapOk = await testFileExists("sitemap.xml");
-        const robotsOk = await testFileExists("robots.txt");
+        const sitemapCheck = await findExistingFile('sitemap.xml');
+        const robotsCheck = await findExistingFile('robots.txt');
 
-        const resultEl = document.getElementById("plugin-test");
+        const resultEl = document.getElementById('plugin-test');
 
-        if (seoOk && sitemapOk && robotsOk) {
+        if (seoOk && sitemapCheck.found && robotsCheck.found) {
           resultEl.innerHTML =
-            '<strong style="color:green;">✅ Plugin is working! SEO meta tags, sitemap.xml, and robots.txt detected.</strong>';
+            '<strong style="color:green;">✅ Plugin is working! SEO meta tags, sitemap.xml, and robots.txt detected.</strong>' +
+            `<div style="font-size:0.9em;margin-top:6px;">sitemap: ${sitemapCheck.url} — robots: ${robotsCheck.url}</div>`;
         } else {
-          let errors = [];
-          if (!seoOk) errors.push("SEO meta tags missing");
-          if (!sitemapOk) errors.push("sitemap.xml missing");
-          if (!robotsOk) errors.push("robots.txt missing");
+          const errors = [];
+          if (!seoOk) errors.push('SEO meta tags missing');
+          if (!sitemapCheck.found) errors.push('sitemap.xml missing');
+          if (!robotsCheck.found) errors.push('robots.txt missing');
           resultEl.innerHTML =
-            '<strong style="color:red;">❌ Plugin test failed: ' +
-            errors.join(", ") +
-            "</strong>";
+            '<strong style="color:red;">❌ Plugin test failed: ' + errors.join(', ') + '</strong>' +
+            `<div style="font-size:0.8em;margin-top:6px;color:#666;">Tried: ${ (sitemapCheck.tried || []).concat(robotsCheck.tried || []).join(' , ') }</div>`;
         }
       }
 
-      function setActiveNavLink() {
-        const currentPath = window.location.pathname;
-        const navLinks = document.querySelectorAll('nav a');
-
-        navLinks.forEach(link => {
-          // Remove active class from all links
-          link.classList.remove('active');
-
-          // Get the href path
-          const linkPath = link.getAttribute('href');
-
-          // Check if this link matches the current path
-          if (
-            (currentPath === '/' && linkPath === '/') ||
-            (currentPath !== '/' && linkPath !== '/' && currentPath.includes(linkPath))
-          ) {
-            link.classList.add('active');
-          }
-        });
-      }
-
-      // Set active link when page loads
       document.addEventListener('DOMContentLoaded', () => {
-        setActiveNavLink();
         runPluginTests();
       });
     </script>
