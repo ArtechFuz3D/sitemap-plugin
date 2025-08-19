@@ -4,7 +4,7 @@ import sitemaxPlugin from './sitemax-plugin.js';
 export default defineConfig({
   // use relative base so serving dist/ locally works and GH Pages works too
   // base: './',
-  base: '/sitemax/',
+  // base: '/sitemax/',
   build: {
     outDir: 'dist',
     rollupOptions: {
