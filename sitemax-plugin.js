@@ -27,13 +27,20 @@ export default function sitemaxPlugin(options = {}) {
           // normalize index.html -> directory root
           let route = f.replace(/index\.html$/, "");
           route = route.replace(/\\/g, "/");
+          // ensure single leading slash and no trailing slashes on the route
+          if (!route.startsWith("/")) route = `/${route}`;
+          route = route.replace(/\/+$/,"");
+
           // build absolute URL if siteUrl provided and looks valid
           if (siteUrl && isAbsoluteUrl(siteUrl)) {
-            const base = siteUrl.replace(/\/$/, "");
-            return `${base}/${route}`.replace(/\/+/g, "/").replace(/\/$/, "");
+            // use URL to avoid collapsing protocol slashes and correctly join paths
+            const base = siteUrl.replace(/\/$/, "") + "/";
+            const full = new URL(route.replace(/^\//, ""), base).href;
+            return full.replace(/\/$/, "");
           }
+
           // fallback to root-relative path
-          const rel = `/${route}`.replace(/\/+/g, "/").replace(/\/$/, "");
+          const rel = `${route}`.replace(/\/+/g, "/").replace(/\/$/, "");
           return rel === "" ? "/" : rel;
         })
         // dedupe
